@@ -1,5 +1,7 @@
 Revision history for Perl extension Crypt::Curve25519.
 
 {{$NEXT}}
+
+0.01   2014-02-04 00:33:47
 	Initial version.
 
