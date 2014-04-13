@@ -12,6 +12,28 @@ unsigned char basepoint[32] = {9};
 
 MODULE = Crypt::Curve25519		PACKAGE = Crypt::Curve25519		
 
+void curve25519_secret_key(sk)
+    SV *sk
+    PROTOTYPE: $
+    INIT:
+        int i;
+        unsigned char masked[32];
+        STRLEN l;
+        unsigned char *csk;
+    PPCODE:
+    {
+        csk = SvPV(sk, l);
+
+        if ( l != 32 ) croak("Secret key requires 32 bytes");
+
+        for ( i = 0; i < 32; i++ ) masked[i] = csk[i];
+        masked[0] &= 248;
+        masked[31] &= 127;
+        masked[31] |= 64;
+
+        mXPUSHp(masked, 32);
+    }
+
 void curve25519_public_key(sk, ...)
     SV *sk
     ALIAS:
