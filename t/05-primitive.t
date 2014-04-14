@@ -15,17 +15,13 @@ my $alice_public_key = curve25519( $alice_secret_key, $basepoint );
 my $bob_secret_key = curve25519_secret_key($bob_rand);
 my $bob_public_key = curve25519( $bob_secret_key, $basepoint );
 
-# Alice and Bob exchange their public keys
-my $alice_public_key_hex = unpack('H*', $alice_public_key);
-my $bob_public_key_hex = unpack('H*', $bob_public_key);
-
 # Alice calculates shared secret to communicate with Bob
 my $shared_secret_with_bob = curve25519( $alice_secret_key,
-                                pack('H*', $bob_public_key_hex));
+                                $bob_public_key);
 
 # Bob calculates shared secret to communicate with Alice
 my $shared_secret_with_alice = curve25519( $bob_secret_key,
-                                pack('H*', $alice_public_key_hex));
+                                $alice_public_key);
 
 # Shared secrets are equal
 is( $shared_secret_with_bob, $shared_secret_with_alice,
