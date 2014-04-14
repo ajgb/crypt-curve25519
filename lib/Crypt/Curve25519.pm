@@ -163,7 +163,9 @@ Using secret key generate corresponding 32-byte Curve25519 public key.
 
 =func curve25519_shared_secret
 
-    my $shared_secret = curve25519_shared_secret($my_secret_key, $his_public_key);
+    my $shared_secret = curve25519_shared_secret(
+        $my_secret_key, $his_public_key
+    );
 
 Using provided keys generate 32-byte shared secret, that both parties can use
 without disclosing their private secret keys.
@@ -191,8 +193,8 @@ Curve25519 public key.
 =method shared_secret
 
     my $shared_secret_hex = $c->shared_secret(
-                            $my_secret_key_hex,
-                            $his_public_key_hex);
+        $my_secret_key_hex, $his_public_key_hex
+    );
 
 Using provided hex encoded keys generate 32-byte hex encoded shared secret,
 that both parties can use without disclosing their private secret keys.
