@@ -144,12 +144,18 @@ public key, Curve25519 computes a 32-byte secret shared by the two users. This
 secret can then be used to authenticate and encrypt messages between the two
 users. 
 
+=func curve25519_secret_key($my_random_32byte_string)
+
+    my $my_secret_key = curve25519_secret_key($my_random_32byte_string);
+    
+Using provided 32-byte random string from cryptographically safe source mask
+first and last character returning secret key to use with other functions.
+
 =func curve25519_public_key($my_secret_key)
 
     my $public_key = curve25519_public_key($my_secret_key);
     
-Using provided 32-byte secret key from cryptographically safe source generate
-corresponding 32-byte Curve25519 public key.
+Using masked secret key generate corresponding 32-byte Curve25519 public key.
 
 =func curve25519_shared_secret($my_secret_key, $his_public_key) 
 
@@ -164,12 +170,20 @@ without disclosing their private secret keys.
 
 Create a new object
 
+=method secret_key($my_random_32byte_string_hex)
+
+    my $my_secret_key_hex = $c->secret_key( $my_random_32byte_string_hex );
+    
+Using hex encoded 32-byte random string from cryptographically safe source 
+mask first and last character returning secret key to use with other
+functions.
+
 =method public_key($my_secret_key_hex)
 
     my $public_key_hex = $c->public_key( $my_secret_key_hex );
     
-Using hex encoded 32-byte secret from cryptographically safe source key
-generate corresponding hex encoded 32-byte Curve25519 public key.
+Using hex encoded masked secret key generate corresponding hex encoded 32-byte
+Curve25519 public key.
 
 =method shared_secret($my_secret_key_hex, $his_public_key_hex)
 
@@ -182,7 +196,7 @@ that both parties can use without disclosing their private secret keys.
 
 =head1 EXPORT
 
-Both functions are exported by default.
+All functions are exported by default.
 
 =head1 SEE ALSO
 
