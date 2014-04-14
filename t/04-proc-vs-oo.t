@@ -3,6 +3,7 @@
 use Test::More;
 BEGIN { use_ok('Crypt::Curve25519') };
 
+# OO
 my $c = Crypt::Curve25519->new();
 
 my $alice_rand = '8520f0098930a754748b7ddcb43ef75a0dbf3a0d26381af4eba4a98eaa9b4e6a';
@@ -32,6 +33,7 @@ my $shared_secret_with_alice_hex = $c->shared_secret(
 is( $shared_secret_with_bob_hex, $shared_secret_with_alice_hex,
     "Shared secrets match: $shared_secret_with_bob_hex");
 
+# procedular
 
 # Alice:
 my $alice_secret_key = curve25519_secret_key(pack('H*', $alice_rand));
@@ -41,17 +43,13 @@ my $alice_public_key = curve25519_public_key( $alice_secret_key );
 my $bob_secret_key = curve25519_secret_key(pack('H*', $bob_rand));
 my $bob_public_key = curve25519_public_key( $bob_secret_key );
 
-# Alice and Bob exchange their public keys
-my $alice_public_key_hex = unpack('H*', $alice_public_key);
-my $bob_public_key_hex = unpack('H*', $bob_public_key);
-
 # Alice calculates shared secret to communicate with Bob
 my $shared_secret_with_bob = curve25519_shared_secret( $alice_secret_key,
-                                pack('H*', $bob_public_key_hex));
+                                $bob_public_key);
 
 # Bob calculates shared secret to communicate with Alice
 my $shared_secret_with_alice = curve25519_shared_secret( $bob_secret_key,
-                                pack('H*', $alice_public_key_hex));
+                                $alice_public_key);
 
 # Shared secrets are equal
 is( $shared_secret_with_bob, $shared_secret_with_alice,
