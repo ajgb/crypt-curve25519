@@ -5,11 +5,11 @@ BEGIN { use_ok('Crypt::Curve25519') };
 my $c = Crypt::Curve25519->new();
 
 # Alice:
-my $alice_secret_key_hex = random_hexencoded_32_bytes();
+my $alice_secret_key_hex = $c->secret_key(random_hexencoded_32_bytes());
 my $alice_public_key_hex = $c->public_key( $alice_secret_key_hex );
 
 # Bob:
-my $bob_secret_key_hex = random_hexencoded_32_bytes();
+my $bob_secret_key_hex = $c->secret_key(random_hexencoded_32_bytes());
 my $bob_public_key_hex = $c->public_key( $bob_secret_key_hex );
 
 # Alice and Bob exchange their public keys

@@ -11,6 +11,7 @@ use AutoLoader;
 our @ISA = qw(Exporter);
 
 our %EXPORT_TAGS = ( 'all' => [ qw(
+    curve25519_secret_key
     curve25519_public_key
     curve25519_shared_secret
 ) ] );
@@ -18,6 +19,7 @@ our %EXPORT_TAGS = ( 'all' => [ qw(
 our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
 
 our @EXPORT = qw(
+    curve25519_secret_key
     curve25519_public_key
     curve25519_shared_secret
 );
@@ -29,6 +31,14 @@ XSLoader::load('Crypt::Curve25519', $Crypt::Curve25519::{VERSION} ?
 
 sub new {
     return bless(\(my $o = 1), ref $_[0] ? ref $_[0] : $_[0] );
+}
+
+sub secret_key {
+    my ($self, $psk) = (shift, shift);
+
+    my $masked = curve25519_secret_key( pack('H*', $psk) );
+
+    return unpack('H*', $masked);
 }
 
 sub public_key {
@@ -60,11 +70,11 @@ __END__
     use Crypt::Curve25519;
     
     # Alice:
-    my $alice_secret_key = random_32_bytes();
+    my $alice_secret_key = curve25519_secret_key(random_32_bytes());
     my $alice_public_key = curve25519_public_key( $alice_secret_key );
     
     # Bob:
-    my $bob_secret_key = random_32_bytes();
+    my $bob_secret_key = curve25519_secret_key(random_32_bytes());
     my $bob_public_key = curve25519_public_key( $bob_secret_key );
     
     # Alice and Bob exchange their public keys
@@ -90,11 +100,11 @@ This package provides also simplified OO interface:
     my $c = Crypt::Curve25519->new();
 
     # Alice:
-    my $alice_secret_key_hex = random_hexencoded_32_bytes();
+    my $alice_secret_key_hex = $c->secret_key(random_hexencoded_32_bytes());
     my $alice_public_key_hex = $c->public_key( $alice_secret_key_hex );
 
     # Bob:
-    my $bob_secret_key_hex = random_hexencoded_32_bytes();
+    my $bob_secret_key_hex = $c->secret_key(random_hexencoded_32_bytes());
     my $bob_public_key_hex = $c->public_key( $bob_secret_key_hex );
 
     # Alice and Bob exchange their public keys

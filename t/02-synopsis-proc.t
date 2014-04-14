@@ -3,11 +3,11 @@ use Test::More;
 BEGIN { use_ok('Crypt::Curve25519') };
 
 # Alice:
-my $alice_secret_key = random_32_bytes();
+my $alice_secret_key = curve25519_secret_key(random_32_bytes());
 my $alice_public_key = curve25519_public_key( $alice_secret_key );
 
 # Bob:
-my $bob_secret_key = random_32_bytes();
+my $bob_secret_key = curve25519_secret_key(random_32_bytes());
 my $bob_public_key = curve25519_public_key( $bob_secret_key );
 
 # Alice and Bob exchange their public keys
