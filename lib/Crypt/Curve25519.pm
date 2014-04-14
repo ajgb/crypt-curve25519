@@ -152,14 +152,14 @@ users.
 
     my $my_secret_key = curve25519_secret_key($my_random_32byte_string);
     
-Using provided 32-byte random string from cryptographically safe source mask
-first and last character returning secret key to use with other functions.
+Using provided 32-byte random string from cryptographically safe source create
+secret key.
 
 =func curve25519_public_key
 
     my $public_key = curve25519_public_key($my_secret_key);
     
-Using masked secret key generate corresponding 32-byte Curve25519 public key.
+Using secret key generate corresponding 32-byte Curve25519 public key.
 
 =func curve25519_shared_secret
 
@@ -179,8 +179,7 @@ Create a new object
     my $my_secret_key_hex = $c->secret_key( $my_random_32byte_string_hex );
     
 Using hex encoded 32-byte random string from cryptographically safe source 
-mask first and last character returning secret key to use with other
-functions.
+create secret key.
 
 =method public_key
 
