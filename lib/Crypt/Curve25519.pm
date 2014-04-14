@@ -16,7 +16,7 @@ our %EXPORT_TAGS = ( 'all' => [ qw(
     curve25519_shared_secret
 ) ] );
 
-our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
+our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} }, 'curve25519' );
 
 our @EXPORT = qw(
     curve25519_secret_key

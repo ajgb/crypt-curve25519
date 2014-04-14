@@ -3,6 +3,12 @@ use Test::More;
 BEGIN { use_ok('Crypt::Curve25519') };
 
 eval {
+    Crypt::Curve25519::curve25519( pack('H*',
+            "0000000000000000000000000000000000000000000000000000000000000000") );
+};
+like($@, qr/Using primitive function requires two arguments/, "curve25519(): Using primitive function requires two arguments");
+
+eval {
     curve25519_secret_key( pack('H*', "secret too short") );
 };
 like($@, qr/Secret key requires 32 bytes/, "curve25519_secret_key(): Secret key requires 32 bytes");
