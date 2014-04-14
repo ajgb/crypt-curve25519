@@ -82,12 +82,16 @@ __END__
     my $bob_public_key_hex = unpack('H*', $bob_public_key);
     
     # Alice calculates shared secret to communicate with Bob
-    my $shared_secret_with_bob = curve25519_shared_secret( $alice_secret_key,
-                                      pack('H*', $bob_public_key_hex));
+    my $shared_secret_with_bob = curve25519_shared_secret(
+        $alice_secret_key,
+        pack('H*', $bob_public_key_hex)
+    );
     
     # Bob calculates shared secret to communicate with Alice
-    my $shared_secret_with_alice = curve25519_shared_secret( $bob_secret_key,
-                                      pack('H*', $alice_public_key_hex));
+    my $shared_secret_with_alice = curve25519_shared_secret(
+        $bob_secret_key,
+        pack('H*', $alice_public_key_hex)
+    );
     
     # Shared secrets are equal
     die "Something horrible has happend!"
