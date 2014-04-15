@@ -3,6 +3,7 @@ Revision history for Perl extension Crypt::Curve25519.
 {{$NEXT}}
     Missed to point out the requirement of masking the random bytes
       to create secret key - reported by Marc Lehmann
+    Improve documentation
     Add more unit tests
 
 0.01   2014-02-04 00:33:47
