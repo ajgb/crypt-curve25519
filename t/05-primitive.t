@@ -2,10 +2,10 @@
 use Test::More;
 BEGIN { use_ok('Crypt::Curve25519', qw(curve25519_secret_key curve25519)) };
 
-my $basepoint = pack('H*', '0900000000000000000000000000000000000000000000000000000000000000');
+my $basepoint = pack('H64', '09');
 
-my $alice_rand = pack('H*', '8520f0098930a754748b7ddcb43ef75a0dbf3a0d26381af4eba4a98eaa9b4e6a');
-my $bob_rand = pack('H*', '5dab087e624a8a4b79e17f8b83800ee66f3bb1292618b6fd1c2f8b27ff88e0eb');
+my $alice_rand = pack('H64', '8520f0098930a754748b7ddcb43ef75a0dbf3a0d26381af4eba4a98eaa9b4e6a');
+my $bob_rand = pack('H64', '5dab087e624a8a4b79e17f8b83800ee66f3bb1292618b6fd1c2f8b27ff88e0eb');
 
 # Alice:
 my $alice_secret_key = curve25519_secret_key($alice_rand);

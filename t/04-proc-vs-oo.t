@@ -36,11 +36,11 @@ is( $shared_secret_with_bob_hex, $shared_secret_with_alice_hex,
 # procedular
 
 # Alice:
-my $alice_secret_key = curve25519_secret_key(pack('H*', $alice_rand));
+my $alice_secret_key = curve25519_secret_key(pack('H64', $alice_rand));
 my $alice_public_key = curve25519_public_key( $alice_secret_key );
 
 # Bob:
-my $bob_secret_key = curve25519_secret_key(pack('H*', $bob_rand));
+my $bob_secret_key = curve25519_secret_key(pack('H64', $bob_rand));
 my $bob_public_key = curve25519_public_key( $bob_secret_key );
 
 # Alice calculates shared secret to communicate with Bob
@@ -53,20 +53,20 @@ my $shared_secret_with_alice = curve25519_shared_secret( $bob_secret_key,
 
 # Shared secrets are equal
 is( $shared_secret_with_bob, $shared_secret_with_alice,
-    "Shared secrets match: ". unpack('H*', $shared_secret_with_bob));
+    "Shared secrets match: ". unpack('H64', $shared_secret_with_bob));
 
 
 # OO vs proc
-is( $alice_secret_key_hex, unpack('H*', $alice_secret_key),
+is( $alice_secret_key_hex, unpack('H64', $alice_secret_key),
     "Alice's secret keys in OO and procedular interfaces are the same");
-is( $alice_public_key_hex, unpack('H*', $alice_public_key),
+is( $alice_public_key_hex, unpack('H64', $alice_public_key),
     "... as are public keys");
-is( $bob_secret_key_hex, unpack('H*', $bob_secret_key),
+is( $bob_secret_key_hex, unpack('H64', $bob_secret_key),
     "Bob's secret keys in OO and procedular interfaces are the same");
-is( $bob_public_key_hex, unpack('H*', $bob_public_key),
+is( $bob_public_key_hex, unpack('H64', $bob_public_key),
     "... as are public keys");
 
-is( $shared_secret_with_bob_hex, unpack('H*', $shared_secret_with_alice),
+is( $shared_secret_with_bob_hex, unpack('H64', $shared_secret_with_alice),
     "Shared secrets in OO and procedular interfaces are also the same");
 
 

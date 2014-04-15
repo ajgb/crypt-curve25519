@@ -33,7 +33,7 @@ sub random_32_bytes {
 }
 
 sub random_hexencoded_32_bytes {
-    return unpack('H*', random_32_bytes());
+    return unpack('H64', random_32_bytes());
 }
 
 done_testing();

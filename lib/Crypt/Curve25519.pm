@@ -36,19 +36,19 @@ sub new {
 sub secret_key {
     my ($self, $psk) = (shift, shift);
 
-    my $masked = curve25519_secret_key( pack('H*', $psk) );
+    my $masked = curve25519_secret_key( pack('H64', $psk) );
 
-    return unpack('H*', $masked);
+    return unpack('H64', $masked);
 }
 
 sub public_key {
     my ($self, $sk) = (shift, shift);
-    my @args = pack('H*', $sk);
+    my @args = pack('H64', $sk);
     if ( @_ ) {
-        push @args, pack('H*', shift);
+        push @args, pack('H64', shift);
     }
 
-    my $pk = eval { unpack('H*', curve25519_public_key( @args )); };
+    my $pk = eval { unpack('H64', curve25519_public_key( @args )); };
     croak("P: $@\n") if $@;
 
     return $pk;
@@ -56,9 +56,9 @@ sub public_key {
 
 sub shared_secret {
     my ($self, $sk, $pk) = @_;
-    my @args = ( pack('H*', $sk), pack('H*', $pk) );
+    my @args = ( pack('H64', $sk), pack('H64', $pk) );
 
-    return unpack('H*', curve25519_shared_secret( @args ));
+    return unpack('H64', curve25519_shared_secret( @args ));
 }
 
 1;
@@ -78,19 +78,19 @@ __END__
     my $bob_public_key = curve25519_public_key( $bob_secret_key );
     
     # Alice and Bob exchange their public keys
-    my $alice_public_key_hex = unpack('H*', $alice_public_key);
-    my $bob_public_key_hex = unpack('H*', $bob_public_key);
+    my $alice_public_key_hex = unpack('H64', $alice_public_key);
+    my $bob_public_key_hex = unpack('H64', $bob_public_key);
     
     # Alice calculates shared secret to communicate with Bob
     my $shared_secret_with_bob = curve25519_shared_secret(
         $alice_secret_key,
-        pack('H*', $bob_public_key_hex)
+        pack('H64', $bob_public_key_hex)
     );
     
     # Bob calculates shared secret to communicate with Alice
     my $shared_secret_with_alice = curve25519_shared_secret(
         $bob_secret_key,
-        pack('H*', $alice_public_key_hex)
+        pack('H64', $alice_public_key_hex)
     );
     
     # Shared secrets are equal
@@ -134,7 +134,7 @@ Example functions to generate pseudo-random private secret key:
     }
 
     sub random_hexencoded_32_bytes {
-       return unpack('H*', random_32_bytes());
+       return unpack('H64', random_32_bytes());
     }
 
 =head1 DESCRIPTION
