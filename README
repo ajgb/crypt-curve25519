@@ -18,7 +18,7 @@ SYNOPSIS
     
         # Alice and Bob exchange their public keys
         my $alice_public_key_hex = unpack('H64', $alice_public_key);
-        my $bob_public_key_hex = unpack('H64', $bob_public_key);
+        my $bob_public_key_hex   = unpack('H64', $bob_public_key);
     
         # Alice calculates shared secret to communicate with Bob
         my $shared_secret_with_bob = curve25519_shared_secret(
