@@ -48,8 +48,7 @@ sub public_key {
         push @args, pack('H64', shift);
     }
 
-    my $pk = eval { unpack('H64', curve25519_public_key( @args )); };
-    croak("P: $@\n") if $@;
+    my $pk = unpack('H64', curve25519_public_key( @args ));
 
     return $pk;
 }
