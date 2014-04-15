@@ -211,3 +211,6 @@ All functions are exported by default.
 =back
 
 =cut
+
+=for Pod::Coverage curve25519
+
