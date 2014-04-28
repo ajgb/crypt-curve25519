@@ -11,12 +11,13 @@ use AutoLoader;
 our @ISA = qw(Exporter);
 
 our %EXPORT_TAGS = ( 'all' => [ qw(
+    curve25519
     curve25519_secret_key
     curve25519_public_key
     curve25519_shared_secret
 ) ] );
 
-our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} }, 'curve25519' );
+our @EXPORT_OK = ( @{ $EXPORT_TAGS{'all'} } );
 
 our @EXPORT = qw(
     curve25519_secret_key
@@ -55,9 +56,14 @@ sub public_key {
 
 sub shared_secret {
     my ($self, $sk, $pk) = @_;
-    my @args = ( pack('H64', $sk), pack('H64', $pk) );
 
-    return unpack('H64', curve25519_shared_secret( @args ));
+    return unpack('H64', curve25519_shared_secret( pack('H64', $sk), pack('H64', $pk) ));
+}
+
+sub generate {
+    my ($self, $sk, $bp) = @_;
+
+    return unpack('H64', curve25519( pack('H64', $sk), pack('H64', $bp) ));
 }
 
 1;
@@ -169,6 +175,25 @@ Using masked secret key generate corresponding 32-byte Curve25519 public key.
 Using provided keys generate 32-byte shared secret, that both parties can use
 without disclosing their private secret keys.
 
+=func curve25519
+
+Access to primitive function is also provided.
+
+    use Crypt::Curve25519 'curve25519';
+
+    my $key = curve25519($my_secret_key, $basepoint);
+
+    # public key
+    if ( $basepoint eq pack('H64', '09') ) {
+        print "\$key is a public key\n";
+    }
+    elsif ( $basepoint eq $his_public_key ) {
+        print "\$key is a shared secret\n";
+    }
+
+Using provided secret key and depending on the 32-byte basepoint generate
+32-byte public key or shared secret.
+
 =method new
 
     my $c = Crypt::Curve25519->new();
@@ -198,9 +223,22 @@ Curve25519 public key.
 Using provided hex encoded keys generate 32-byte hex encoded shared secret,
 that both parties can use without disclosing their private secret keys.
 
-=head1 EXPORT
+=method generate
 
-All functions are exported by default.
+Access to primitive method is also provided.
+
+    my $key_hex = $c->generate($my_secret_key_hex, $basepoint_hex);
+
+    # public key
+    if ( $basepoint_hex eq unpack("H64", pack("H64", "09")) ) {
+        print "\$key_hex is a public key\n";
+    }
+    elsif ( $basepoint_hex eq $his_public_key_hex ) {
+        print "\$key_hex is a shared secret\n";
+    }
+
+Using provided hex encoded secret key and depending on the 32-byte hex
+encoded basepoint generate 32-byte hex encoded public key or shared secret.
 
 =head1 SEE ALSO
 
@@ -211,6 +249,4 @@ All functions are exported by default.
 =back
 
 =cut
-
-=for Pod::Coverage curve25519
 

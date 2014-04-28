@@ -3,7 +3,7 @@ NAME
     Diffie-Hellman function
 
 VERSION
-    version 0.02
+    version 0.03
 
 SYNOPSIS
         use Crypt::Curve25519;
@@ -113,6 +113,23 @@ METHODS
     secret, that both parties can use without disclosing their private
     secret keys.
 
+  generate
+    Access to primitive method is also provided.
+
+        my $key_hex = $c->generate($my_secret_key_hex, $basepoint_hex);
+
+        # public key
+        if ( $basepoint_hex eq unpack("H64", pack("H64", "09")) ) {
+            print "\$key_hex is a public key\n";
+        }
+        elsif ( $basepoint_hex eq $his_public_key_hex ) {
+            print "\$key_hex is a shared secret\n";
+        }
+
+    Using provided hex encoded secret key and depending on the 32-byte hex
+    encoded basepoint generate 32-byte hex encoded public key or shared
+    secret.
+
 FUNCTIONS
   curve25519_secret_key
         my $my_secret_key = curve25519_secret_key($my_random_32byte_string);
@@ -134,8 +151,23 @@ FUNCTIONS
     Using provided keys generate 32-byte shared secret, that both parties
     can use without disclosing their private secret keys.
 
-EXPORT
-    All functions are exported by default.
+  curve25519
+    Access to primitive function is also provided.
+
+        use Crypt::Curve25519 'curve25519';
+
+        my $key = curve25519($my_secret_key, $basepoint);
+
+        # public key
+        if ( $basepoint eq pack('H64', '09') ) {
+            print "\$key is a public key\n";
+        }
+        elsif ( $basepoint eq $his_public_key ) {
+            print "\$key is a shared secret\n";
+        }
+
+    Using provided secret key and depending on the 32-byte basepoint
+    generate 32-byte public key or shared secret.
 
 SEE ALSO
     *   <http://cr.yp.to/ecdh.html>
