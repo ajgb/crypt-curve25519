@@ -12,6 +12,9 @@ unsigned char basepoint[32] = {9};
 
 MODULE = Crypt::Curve25519		PACKAGE = Crypt::Curve25519		
 
+# Although curve25519_donna is also clamping the secret key this function
+# has been provided for completeness and to ensure that secret keys generated
+# here can be used in other implementations of the algorithm.
 void curve25519_secret_key(sk)
     SV *sk
     PROTOTYPE: $
