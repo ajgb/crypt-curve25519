@@ -9,7 +9,7 @@ WriteMakefile(
         NAME   => 'Crypt::Curve25519::curve25519donna',
         SKIP   => [qw(all static_lib static dynamic_lib dynamic)],
         clean  => {'FILES' => "$extlib\$(LIBEEXT)"},
-        CCFLAGS => $extflags, 
+        CCFLAGS => $extflags,
         NO_META => 1,
         NO_MYMETA => 1,
         C => [ "$extlib.c" ],

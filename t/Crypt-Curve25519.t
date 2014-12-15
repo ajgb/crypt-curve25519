@@ -26,7 +26,7 @@ for my $iter ( 1 .. 10000 ) {
     my $bob_public_key = curve25519_public_key($bob_secret_key, $basepoint);
 
     # e1e2k = f(e1, e2k)
-    my $alice_shared_secret = curve25519_shared_secret($alice_secret_key, $bob_public_key); 
+    my $alice_shared_secret = curve25519_shared_secret($alice_secret_key, $bob_public_key);
     # e2e1k = f(e2, e1k)
     my $bob_shared_secret = curve25519_shared_secret($bob_secret_key, $alice_public_key);
 
