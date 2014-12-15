@@ -1,7 +1,7 @@
 use ExtUtils::MakeMaker;
 use Config;
 
-my $extlib = $Config{archname} =~ /64/ ? 'curve25519-donna-c64' : 'curve25519-donna';
+my $extlib = $Config{archname} =~ /(?:amd64|x86_64)/ ? 'curve25519-donna-c64' : 'curve25519-donna';
 
 WriteMakefile(
     NAME              => 'Crypt::Curve25519',
