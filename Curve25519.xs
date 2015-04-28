@@ -4,11 +4,13 @@
 
 #include "ppport.h"
 
-extern void curve25519_donna(unsigned char *output, const unsigned char *a,
-                             const unsigned char *b);
+#if USE_X64
+#include "curve25519-donna-c64.c"
+#else
+#include "curve25519-donna.c"
+#endif
 
 unsigned char basepoint[32] = {9};
-
 
 MODULE = Crypt::Curve25519		PACKAGE = Crypt::Curve25519		
 
