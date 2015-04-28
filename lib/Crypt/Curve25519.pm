@@ -6,8 +6,6 @@ use warnings;
 use Carp qw( croak );
 
 require Exporter;
-use AutoLoader;
-
 our @ISA = qw(Exporter);
 
 our %EXPORT_TAGS = ( 'all' => [ qw(
