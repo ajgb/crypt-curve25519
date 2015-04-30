@@ -5,7 +5,7 @@ BEGIN { use_ok('Crypt::Curve25519') };
 eval {
     Crypt::Curve25519::curve25519( pack('x32') );
 };
-like($@, qr/Using primitive function requires two arguments/, "curve25519(): Using primitive function requires two arguments");
+like($@, qr/\QUsage: Crypt::Curve25519::curve25519(secret, public)/, "curve25519(): Using primitive function requires two arguments");
 
 eval {
     curve25519_secret_key( "secret too short" );
@@ -20,8 +20,7 @@ like($@, qr/Secret key requires 32 bytes/, "curve25519_public_key(): Secret key 
 eval {
     curve25519_shared_secret( pack('x32') );
 };
-like($@, qr/Calculating shared secret requires public key/,
-    "curve25519_shared_secret:() Calculating shared secret requires public key");
+like($@, qr/\QUsage: Crypt::Curve25519::curve25519_shared_secret(secret, public)/, "curve25519_shared_secret:() Calculating shared secret requires public key");
 
 eval {
     curve25519_public_key( pack('x32'), "basepoint too short" );
