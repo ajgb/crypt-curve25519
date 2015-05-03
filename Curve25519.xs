@@ -3,8 +3,6 @@
 #include "perl.h"
 #include "XSUB.h"
 
-#include "ppport.h"
-
 #if USE_X64
 #include "curve25519-donna-c64.c"
 #else
