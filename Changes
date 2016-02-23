@@ -1,6 +1,8 @@
 Revision history for Perl extension Crypt::Curve25519.
 
 {{$NEXT}}
+
+0.05   2016-02-23 22:02:53
     Fix 64int archname detection in the remaining Makefile.PL
       - patch provided by Lance Kinley.
 
