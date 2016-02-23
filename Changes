@@ -1,6 +1,8 @@
 Revision history for Perl extension Crypt::Curve25519.
 
 {{$NEXT}}
+    Fix 64int archname detection in the remaining Makefile.PL
+      - patch provided by Lance Kinley.
 
 0.04   2014-12-15 01:43:32
     There are 32bit platforms with 64int, harden the archname check
