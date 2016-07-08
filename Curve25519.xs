@@ -44,7 +44,7 @@ void curve25519(sk, ...)
         curve25519_shared_secret = 2
     PROTOTYPE: $;$
     INIT:
-        unsigned char OUT[32];
+        unsigned char out[32];
         unsigned char *bp;
         STRLEN l;
         unsigned char *csk;
@@ -75,8 +75,8 @@ void curve25519(sk, ...)
             bp = basepoint;
         }
 
-        curve25519_donna(OUT, csk, bp);
+        curve25519_donna(out, csk, bp);
 
-        mXPUSHp(OUT, 32);
+        mXPUSHp(out, 32);
     }
 
