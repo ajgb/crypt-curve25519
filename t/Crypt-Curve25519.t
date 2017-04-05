@@ -1,3 +1,5 @@
+use strict;
+use warnings;
 
 use Test::More;
 use Crypt::Curve25519;
@@ -17,8 +19,6 @@ my $alice_10k_expected  = '4faf81190869fd742a33691b0e0824d57e0329f4dd2819f5f32d1
 my $bob_10k_expected    = '05aec13f92286f3a781ccae98995a3b9e0544770bc7de853b38f9100489e3e79';
 my $shared_10k_expected = 'cd6e8269104eb5aaee886bd2071fba88bd13861475516bc2cd2b6e005e805064';
 
-my ($alice_10k, $bob_10k, $shared_10k) = ('') x 3;
-
 for my $iter ( 1 .. 10000 ) {
     # e1k = f(e1, k)
     my $alice_public_key = curve25519_public_key($alice_secret_key, $basepoint);
@@ -34,44 +34,26 @@ for my $iter ( 1 .. 10000 ) {
         unpack('H64', $alice_shared_secret));
 
     if ( $iter == 200 ) {
-        $alice_200 = unpack('H64', $alice_secret_key);
-        $bob_200 = unpack('H64', $bob_public_key);
-        $shared_200 = unpack('H64', $alice_shared_secret);
+        my $alice_200 = unpack('H64', $alice_secret_key);
+        is($alice_200, $alice_200_expected, "Iteration no. 200 calculates correct secret key for Alice: $alice_200");
+        my $bob_200 = unpack('H64', $bob_public_key);
+        is($bob_200, $bob_200_expected, "... and correct public key for Bob: $bob_200");
+        my $shared_200 = unpack('H64', $alice_shared_secret);
+        is($shared_200, $shared_200_expected, "... and correct shared key for Alice & Bob: $shared_200");
     }
     elsif ( $iter == 10_000 ) {
-        $alice_10k = unpack('H64', $alice_secret_key);
-        $bob_10k = unpack('H64', $bob_public_key);
-        $shared_10k = unpack('H64', $alice_shared_secret);
-
-        last;
+        my $alice_10k = unpack('H64', $alice_secret_key);
+        is($alice_10k, $alice_10k_expected, "Iteration no. 10000 calculates correct secret key for Alice: $alice_10k");
+        my $bob_10k = unpack('H64', $bob_public_key);
+        is($bob_10k, $bob_10k_expected, "... and correct public key for Bob: $bob_10k");
+        my $shared_10k = unpack('H64', $alice_shared_secret);
+        is($shared_10k, $shared_10k_expected, "... and correct shared key for Alice & Bob: $shared_10k");
     }
 
-    for my $i ( 0 .. 31 ) {
-        my $c = substr($alice_secret_key, $i, 1);
-        my $h = substr($bob_public_key, $i, 1);
-        substr($alice_secret_key, $i, 1, chr(ord($c) ^ ord($h)));
-    }
-
-    for my $i ( 0 .. 31 ) {
-        my $c = substr($bob_secret_key, $i, 1);
-        my $h = substr($alice_public_key, $i, 1);
-        substr($bob_secret_key, $i, 1, chr(ord($c) ^ ord($h)));
-    }
-
-    for my $i ( 0 .. 31 ) {
-        my $c = substr($basepoint, $i, 1);
-        my $h = substr($alice_shared_secret, $i, 1);
-        substr($basepoint, $i, 1, chr(ord($c) ^ ord($h)));
-    }
+    $alice_secret_key ^= $bob_public_key;
+    $bob_secret_key ^= $alice_public_key;
+    $basepoint ^= $alice_shared_secret;
 }
-
-is($alice_200, $alice_200_expected, "Iteration no. 200 calculates correct secret key for Alice: $alice_200");
-is($bob_200, $bob_200_expected, "... and correct public key for Bob: $bob_200");
-is($shared_200, $shared_200_expected, "... and correct shared key for Alice & Bob: $shared_200");
-
-is($alice_10k, $alice_10k_expected, "Iteration no. 10000 calculates correct secret key for Alice: $alice_10k");
-is($bob_10k, $bob_10k_expected, "... and correct public key for Bob: $bob_10k");
-is($shared_10k, $shared_10k_expected, "... and correct shared key for Alice & Bob: $shared_10k");
 
 done_testing();
 

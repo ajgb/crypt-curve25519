@@ -1,82 +1,48 @@
+#define PERL_NO_GET_CONTEXT
 #include "EXTERN.h"
 #include "perl.h"
 #include "XSUB.h"
 
-#include "ppport.h"
+#if USE_X64
+#include "curve25519-donna-c64.c"
+#else
+#include "curve25519-donna.c"
+#endif
 
-extern void curve25519_donna(unsigned char *output, const unsigned char *a,
-                             const unsigned char *b);
+static u8* S_get_buffer(pTHX_ SV* variable, const char* name) {
+	STRLEN len;
+	u8* ret = (u8*) SvPV(variable, len);
+	if (len != 32)
+		Perl_croak(aTHX_ "%s requires 32 bytes", name);
+	return ret;
+}
+#define get_buffer(variable, name) S_get_buffer(aTHX_ variable, name)
 
-unsigned char basepoint[32] = {9};
+typedef u8 keybuffer[32];
+typedef const u8* keyptr;
 
+static const keybuffer basepoint = {9};
 
-MODULE = Crypt::Curve25519		PACKAGE = Crypt::Curve25519		
+MODULE = Crypt::Curve25519		PACKAGE = Crypt::Curve25519
 
-# Although curve25519_donna is also clamping the secret key this function
-# has been provided for completeness and to ensure that secret keys generated
-# here can be used in other implementations of the algorithm.
-void curve25519_secret_key(sk)
-    SV *sk
-    PROTOTYPE: $
-    INIT:
-        int i;
-        unsigned char masked[32];
-        STRLEN l;
-        unsigned char *csk;
-    PPCODE:
-    {
-        csk = SvPV(sk, l);
+PROTOTYPES: DISABLED
 
-        if ( l != 32 ) croak("Secret key requires 32 bytes");
+keybuffer
+curve25519_public_key(secret, base = 9)
+    keyptr secret = get_buffer(ST(0), "Secret key");
+    keyptr base = items > 1 ? get_buffer(ST(1), "Basepoint") : basepoint;
+    CODE:
+    curve25519_donna(RETVAL, secret, base);
+    OUTPUT:
+    RETVAL
 
-        for ( i = 0; i < 32; i++ ) masked[i] = csk[i];
-        masked[0] &= 248;
-        masked[31] &= 127;
-        masked[31] |= 64;
-
-        mXPUSHp(masked, 32);
-    }
-
-void curve25519(sk, ...)
-    SV *sk
+keybuffer
+curve25519_shared_secret(secret, public)
+    keyptr secret = get_buffer(ST(0), "Secret key");
+    keyptr public = get_buffer(ST(1), "Public key");
     ALIAS:
-        curve25519_public_key = 1
-        curve25519_shared_secret = 2
-    PROTOTYPE: $;$
-    INIT:
-        unsigned char OUT[32];
-        unsigned char *bp;
-        STRLEN l;
-        unsigned char *csk;
-    PPCODE:
-    {
-        csk = SvPV(sk, l);
-
-        if ( l != 32 ) croak("Secret key requires 32 bytes");
-
-        if ( ix == 0 && items != 2 ) croak("Using primitive function requires two arguments");
-
-        if ( ix == 2 && items != 2 ) croak("Calculating shared secret requires public key");
-
-        /* ST(1) is a basepoint:
-         * his public key
-         * or
-         * custom one used to generate public key
-         */
-        if ( ix == 2 || items == 2 ) {
-
-            bp = SvPV(ST(1), l);
-
-            if ( l != 32 ) {
-                if ( ix == 2 ) croak("Public key requires 32 bytes");
-                else croak("Basepoint requires 32 bytes");
-            }
-        } else {
-            bp = basepoint;
-        }
-
-        curve25519_donna(OUT, csk, bp);
-
-        mXPUSHp(OUT, 32);
-    }
-
+        curve25519 = 1
+    CODE:
+    curve25519_donna(RETVAL, secret, public);
+    OUTPUT:
+    RETVAL

@@ -6,8 +6,6 @@ use warnings;
 use Carp qw( croak );
 
 require Exporter;
-use AutoLoader;
-
 our @ISA = qw(Exporter);
 
 our %EXPORT_TAGS = ( 'all' => [ qw(
@@ -24,6 +22,18 @@ our @EXPORT = qw(
     curve25519_public_key
     curve25519_shared_secret
 );
+
+# Although curve25519_donna is also clamping the secret key this function
+# has been provided for completeness and to ensure that secret keys generated
+# here can be used in other implementations of the algorithm.
+sub curve25519_secret_key {
+	my $value = shift;
+	croak 'Secret key requires 32 bytes' if length($value) != 32;
+	vec($value, 0 , 8) &= 248;
+	vec($value, 31, 8) &= 127;
+	vec($value, 31, 8) |= 64;
+	return $value;
+}
 
 require XSLoader;
 XSLoader::load('Crypt::Curve25519', $Crypt::Curve25519::{VERSION} ?
