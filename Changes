@@ -1,6 +1,8 @@
 Revision history for Perl extension Crypt::Curve25519.
 
 {{$NEXT}}
+
+0.06   2017-04-06 00:25:43
     Various building and XS improvements
       - provided by Leon Timmermans.
 
