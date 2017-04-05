@@ -3,7 +3,7 @@ NAME
     Diffie-Hellman function
 
 VERSION
-    version 0.05
+    version 0.06
 
 SYNOPSIS
         use Crypt::Curve25519;
