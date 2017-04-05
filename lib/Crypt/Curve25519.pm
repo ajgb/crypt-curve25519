@@ -27,12 +27,12 @@ our @EXPORT = qw(
 # has been provided for completeness and to ensure that secret keys generated
 # here can be used in other implementations of the algorithm.
 sub curve25519_secret_key {
-	my $value = shift;
-	croak 'Secret key requires 32 bytes' if length($value) != 32;
-	vec($value, 0 , 8) &= 248;
-	vec($value, 31, 8) &= 127;
-	vec($value, 31, 8) |= 64;
-	return $value;
+    my $value = shift;
+    croak 'Secret key requires 32 bytes' if length($value) != 32;
+    vec($value, 0 , 8) &= 248;
+    vec($value, 31, 8) &= 127;
+    vec($value, 31, 8) |= 64;
+    return $value;
 }
 
 require XSLoader;
